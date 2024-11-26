@@ -12,7 +12,7 @@ import (
 var (
 	ErrInvalidArg   = errors.New("invalid query argument")
 	ErrInvalidInput = errors.New("invalid input")
-	success         = &SuccessResponse{Ok: true} //nolint:gochecknoglobals
+	success         = &SuccessResponse{V: true} //nolint:gochecknoglobals
 )
 
 type ErrResponse struct {
@@ -20,7 +20,7 @@ type ErrResponse struct {
 }
 
 type SuccessResponse struct {
-	Ok bool `json:"ok"`
+	V bool `json:"success"`
 }
 
 func writeErrResponse(w http.ResponseWriter, err error, status int) error {

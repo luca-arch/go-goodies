@@ -14,6 +14,8 @@ var (
 	ErrSelectOne = errors.New("select (one row) error")
 )
 
+type NamedArgs = pgx.NamedArgs
+
 // Count executes the provided SQL expecting a COUNT.
 func Count(ctx context.Context, db *Database, sql string, args ...any) (int64, error) {
 	db.logger.Debug("query", "sql", sql, "args", args)

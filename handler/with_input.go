@@ -11,7 +11,7 @@ import (
 type FuncWithInput[In any] func(context.Context, In) error
 
 // WithInput takes a FuncWithInput and uses it to create an HTTP handler that reads the request's body.
-func WithInput[In any, Out any](logger *slog.Logger, f FuncWithInput[In]) http.Handler {
+func WithInput[In any](logger *slog.Logger, f FuncWithInput[In]) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var (
 			in  In

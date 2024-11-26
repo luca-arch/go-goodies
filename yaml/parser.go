@@ -15,28 +15,6 @@ var (
 	ErrUnmarshal = errors.New("error unmarshalling YAML")
 )
 
-// RecursiveMerge merges src into dest recursively.
-func RecursiveMerge(dest, src map[string]interface{}) map[string]interface{} {
-	for key, srcValue := range src {
-		if destValue, exists := dest[key]; exists {
-			// If both values are maps, merge them recursively
-			destMap, ok1 := destValue.(map[string]interface{})
-			srcMap, ok2 := srcValue.(map[string]interface{})
-
-			if ok1 && ok2 {
-				dest[key] = RecursiveMerge(destMap, srcMap)
-
-				continue
-			}
-		}
-
-		// Otherwise, overwrite dest with src
-		dest[key] = srcValue
-	}
-
-	return dest
-}
-
 // LoadYAMLFile loads a YAML file and unmarshals it into a map.
 func LoadYAMLFile(filepath string) (map[string]interface{}, error) {
 	data, err := os.ReadFile(filepath)
@@ -75,6 +53,38 @@ func MergeYAMLFiles(files ...string) (map[string]interface{}, error) {
 	}
 
 	return merged, nil
+}
+
+// MustUnmarshal unmarshals a list of YAML files into a given struct. It panics in case of error.
+func MustUnmarshal[T any](files ...string) *T {
+	t, err := Unmarshal[T](files...)
+	if err != nil {
+		panic(err)
+	}
+
+	return t
+}
+
+// RecursiveMerge merges src into dest recursively.
+func RecursiveMerge(dest, src map[string]interface{}) map[string]interface{} {
+	for key, srcValue := range src {
+		if destValue, exists := dest[key]; exists {
+			// If both values are maps, merge them recursively
+			destMap, ok1 := destValue.(map[string]interface{})
+			srcMap, ok2 := srcValue.(map[string]interface{})
+
+			if ok1 && ok2 {
+				dest[key] = RecursiveMerge(destMap, srcMap)
+
+				continue
+			}
+		}
+
+		// Otherwise, overwrite dest with src
+		dest[key] = srcValue
+	}
+
+	return dest
 }
 
 // Unmarshal unmarshals a list of YAML files into a given struct.
